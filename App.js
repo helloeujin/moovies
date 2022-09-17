@@ -1,21 +1,27 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import AppLoading from "expo-app-loading";
+import React, { useState } from "react";
+import { Text, Image } from "react-native";
+import * as Font from "expo-font";
+import { Ionicons } from "@expo/vector-icons";
+import { Asset, useAssets } from "expo-asset";
+
+const loadFonts = (fonts) => fonts.map((font) => Font.loadAsync(font));
+
+const loadImages = (images) =>
+  images.map((image) => {
+    if (typeof image === "string") {
+      return Image.prefetch(image);
+    } else {
+      return Asset.loadAsync(image);
+    }
+  });
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [assets] = useAssets([require("./thumbs-up.jpeg")]);
+  const [loaded] = Font.useFonts(Ionicons.font);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  if (!assets || !loaded) {
+    return <AppLoading />;
+  }
+  return <Text>1234512345</Text>;
+}
