@@ -1,10 +1,14 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React from "react";
+import { TouchableOpacity, Text } from "react-native";
 
-const Movies = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//// moving from Tabs to Stack navigator
+const Movies = ({ navigation: { navigate } }) => (
+  <TouchableOpacity
+    onPress={() => navigate("Stack", { screen: "One" })}
+    style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+  >
     <Text>Movies</Text>
-  </View>
+  </TouchableOpacity>
 );
 
 export default Movies;

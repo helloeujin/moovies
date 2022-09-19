@@ -458,15 +458,15 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  EXApplication: e418d737a036e788510f2c4ad6c10a7d54d18586
-  EXConstants: 7c44785d41d8e959d527d23d29444277a4d1ee73
-  EXErrorRecovery: 74d71ee59f6814315457b09d68e86aa95cc7d05d
-  EXFileSystem: 927e0a8885aa9c49e50fc38eaba2c2389f2f1019
-  EXFont: a5d80bd9b3452b2d5abbce2487da89b0150e6487
-  Expo: fcdb32274e2ca9c7638d3b21b30fb665c6869219
-  ExpoKeepAwake: 0e8f18142e71bbf2c7f6aa66ebed249ba1420320
-  ExpoModulesCore: 5a973701f4400d70254bc836305228731c829010
-  EXSplashScreen: 799bece80089219b2c989c1082d70f3b00995cda
+  EXApplication: 64a38a15788ec0a9d01eb69683288f30c0726a64
+  EXConstants: e15cbb0181ab1411ef2b5d4b5e8ecdc9b30aeed5
+  EXErrorRecovery: 550d48c3575dcd83538abd7f13f52d30c4fecdb0
+  EXFileSystem: 3b71e2d1d4a3cd7cc4e2875913b9a96b34d323e3
+  EXFont: 30e3213d8e06d20e5f3e94352a94f4e11462eab9
+  Expo: eac7cbf68646ed5819532d7b2df9bb92da1eee22
+  ExpoKeepAwake: d8ca9d3195d7d30f39d04ce79d2f0890f8d7ba00
+  ExpoModulesCore: f1f7203040b469d142e71f362f2f551be7367279
+  EXSplashScreen: 5b3373106c26fbdf32b8bb76b8004b7881dd8a53
   FBLazyVector: 0045cf98ca4a48af3bf7108d85b1c243740fa289
   FBReactNativeSpec: 82e74141263f8c962e288f5cd6b5d149cdc8afe1
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
@@ -485,7 +485,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: e42f0b46de293a026c2fb20e524d4fe09f81f575
   React-jsinspector: e385fb7a1440ae3f3b2cd1a139ca5aadaab43c10
   React-logger: 15c734997c06fe9c9b88e528fb7757601e7a56df
-  react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
+  react-native-safe-area-context: d768fdafd416b4c0bdc7bef4240c9ee53909baf3
   React-perflogger: 367418425c5e4a9f0f80385ee1eaacd2a7348f8e
   React-RCTActionSheet: e4885e7136f98ded1137cd3daccc05eaed97d5a6
   React-RCTAnimation: 7c5a74f301c9b763343ba98a3dd776ed2676993f

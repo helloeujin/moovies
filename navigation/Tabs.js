@@ -6,6 +6,7 @@ import Tv from "../screens/Tv";
 import Search from "../screens/Search";
 import colors from "../colors";
 import { Ionicons } from "@expo/vector-icons";
+import Stack from "./Stack";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,6 +38,7 @@ const Tabs = () => {
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons name="film-outline" color={color} size={size} />
           ),
+          // headerShown: false,
         }}
       />
       <Tab.Screen
