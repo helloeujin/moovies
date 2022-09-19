@@ -5,6 +5,7 @@ import Movies from "../screens/Movies";
 import Tv from "../screens/Tv";
 import Search from "../screens/Search";
 import colors from "../colors";
+import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,13 +16,13 @@ const Tabs = () => {
     <Tab.Navigator
       initialRouteName="Movie"
       screenOptions={{
-        // tabBarLabelStyle: { backgroundColor: 'red',},
         // tabBarLabelPosition: 'beside-icon',
         tabBarStyle: { backgroundColor: isDark ? colors.dark : "white" },
         tabBarActiveTintColor: isDark ? colors.orange : colors.dark,
         tabBarInactiveTintColor: isDark ? colors.gray_0 : colors.gray_1,
         headerStyle: { backgroundColor: isDark ? colors.dark : "white" },
         headerTitleStyle: { color: isDark ? "white" : colors.dark },
+        tabBarLabelStyle: { fontSize: 12, fontWeight: "600", marginTop: -6 },
       }}
     >
       <Tab.Screen
@@ -33,10 +34,34 @@ const Tabs = () => {
               <Text>Hello</Text>
             </View>
           ),
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons name="film-outline" color={color} size={size} />
+          ),
         }}
       />
-      <Tab.Screen name="Tv" component={Tv} options={{ tabBarBadge: 5 }} />
-      <Tab.Screen name="Search" component={Search} />
+      <Tab.Screen
+        name="TV"
+        component={Tv}
+        options={{
+          tabBarBadge: 5,
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons name="tv-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={Search}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "search" : "search-outline"}
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };
