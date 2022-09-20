@@ -6,16 +6,17 @@ const Btn = styled.TouchableOpacity`
   flex: 1;
   justify-content: center;
   align-items: center;
+  background-color: ${(props) => props.theme.mainBgColor};
 `;
 
 const Title = styled.Text`
-  color: ${(props) => (props.selected ? "blue" : "red")};
+  color: ${(props) => props.theme.textColor};
 `;
 
 //// moving from Tabs to Stack navigator
 const Movies = ({ navigation: { navigate } }) => (
   <Btn onPress={() => navigate("Stack", { screen: "Two" })}>
-    <Title selected={false}>Movies</Title>
+    <Title>Movies</Title>
   </Btn>
 );
 

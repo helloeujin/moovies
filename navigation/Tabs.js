@@ -7,6 +7,7 @@ import Search from "../screens/Search";
 import colors from "../colors";
 import { Ionicons } from "@expo/vector-icons";
 import Stack from "./Stack";
+import styled from "styled-components/native";
 
 const Tab = createBottomTabNavigator();
 
