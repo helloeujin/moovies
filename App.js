@@ -9,7 +9,7 @@ import Tabs from "./navigation/Tabs";
 import Stack from "./navigation/Stack";
 import Root from "./navigation/Root";
 import { ThemeProvider } from "styled-components/native";
-import { darkTheme, lightTheme } from "./styled";
+import { darkTheme, lightTheme } from "./themeStyled";
 
 const loadFonts = (fonts) => fonts.map((font) => Font.loadAsync(font));
 
