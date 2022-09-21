@@ -1,24 +1,8 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-// import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import styled from "styled-components/native";
 
-const Btn = styled.TouchableOpacity`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  background-color: ${(props) => props.theme.mainBgColor };
-`;
 
-const Title = styled.Text`
-  color: ${(props) => props.theme.textColor};
-`;
-
-//// moving from Tabs to Stack navigator
-const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({ navigation: {navigate} }) => (
-  <Btn onPress={() => navigate("Stack", { screen: "Two" })}>
-    <Title>Movies</Title>
-  </Btn>
-);
+const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => null
 
 export default Movies;
