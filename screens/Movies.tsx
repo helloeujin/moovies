@@ -1,6 +1,12 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, Text, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  Text,
+  StyleSheet,
+  useColorScheme,
+} from "react-native";
 import Swiper from "react-native-web-swiper";
 import styled from "styled-components/native";
 import { makeImgPath } from "../utilities";
@@ -33,6 +39,7 @@ const API_KEY = "5e53d06765d63c2ad8fe05935854b26d";
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
+  const isDark = useColorScheme() === "dark";
   const [loading, setLoading] = useState(true);
   const [nowPlaying, setNowPlaying] = useState([]);
   const getNowPlaying = async () => {
