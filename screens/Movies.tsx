@@ -7,7 +7,8 @@ import {
   StyleSheet,
   useColorScheme,
 } from "react-native";
-import Swiper from "react-native-web-swiper";
+// import Swiper from "react-native-web-swiper";
+import Swiper from "react-native-swiper";
 import styled from "styled-components/native";
 import { makeImgPath } from "../utilities";
 // import { BlurView } from "expo-blur";
@@ -31,7 +32,39 @@ const BgImg = styled.Image`
   position: absolute;
 `;
 
-const Title = styled.Text``;
+const Poster = styled.Image`
+  width: 100px;
+  height: 160px;
+  border-radius: 5px;
+`;
+
+const Title = styled.Text`
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+`;
+
+const Wrapper = styled.View`
+  flex-direction: row;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Column = styled.View`
+  width: 40%;
+  margin-left: 15px;
+`;
+
+const Overview = styled.Text`
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.6);
+`;
+
+const Votes = styled(Overview)`
+  margin-top: 5px;
+  font-size: 12px;
+`;
 
 const API_KEY = "5e53d06765d63c2ad8fe05935854b26d";
 
@@ -54,6 +87,10 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
 
   useEffect(() => {
     getNowPlaying();
+    console.log({
+      name: "yj",
+      purpose: "test",
+    });
   }, []);
 
   return loading ? (
@@ -63,20 +100,32 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   ) : (
     <Container>
       <Swiper
+        horizontal
         loop
-        timeout={3.5}
-        controlsEnabled={false}
+        autoplay
+        autoplayTimeout={3.5}
+        showsButtons={false}
+        showsPagination={false}
         containerStyle={{ width: "100%", height: SCREEN_HEIGHT / 4 }}
       >
         {nowPlaying.map((movie) => (
           <View key={movie.id}>
             <BgImg source={{ uri: makeImgPath(movie.backdrop_path) }} />
             <BlurView
-              blurType="light"
+              blurType={isDark ? "dark" : "light"}
               blurAmount={10}
               style={StyleSheet.absoluteFill}
             >
-              <Title>{movie.original_title}</Title>
+              <Wrapper>
+                <Poster source={{ uri: makeImgPath(movie.poster_path) }} />
+                <Column>
+                  <Title>{movie.original_title}</Title>
+                  <Overview>{movie.overview.slice(0, 90)}...</Overview>
+                  {movie.vote_average > 0 ? (
+                    <Votes>⭐️{movie.vote_average}/10</Votes>
+                  ) : null}
+                </Column>
+              </Wrapper>
             </BlurView>
           </View>
         ))}
