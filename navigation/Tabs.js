@@ -49,7 +49,7 @@ const Tabs = () => {
         name="TV"
         component={Tv}
         options={{
-          tabBarBadge: 5,
+          tabBarBadge: 3,
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons name="tv-outline" color={color} size={size} />
           ),

@@ -3,20 +3,16 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
-  Text,
-  StyleSheet,
-  useColorScheme,
-  ScrollView,
+  FlatList,
   RefreshControl,
+  Text,
+  View,
 } from "react-native";
-// import Swiper from "react-native-web-swiper";
 import Swiper from "react-native-swiper";
 import styled from "styled-components/native";
-import { makeImgPath } from "../utilities";
-// import { BlurView } from "expo-blur"; // not working
-import { BlurView } from "@react-native-community/blur";
 import Slide from "../components/Slide";
-import Poster from "../components/Poster";
+import HMedia from "../components/HMedia";
+import VMedia from "../components/VMedia";
 
 const Container = styled.ScrollView``;
 
@@ -38,56 +34,16 @@ const ListTitle = styled.Text`
   margin-left: 30px;
 `;
 
-const TrendingScroll = styled.ScrollView`
+const TrendingScroll = styled.FlatList`
   margin-top: 20px;
-`;
-
-const Movie = styled.View`
-  margin-right: 20px;
-  align-items: center;
-`;
-
-const Title = styled.Text`
-  color: white;
-  font-weight: 600;
-  margin-top: 7px;
-  margin-bottom: 5px;
-`;
-
-const Votes = styled.Text`
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 10px;
 `;
 
 const ListContainer = styled.View`
   margin-bottom: 40px;
 `;
 
-const HMovie = styled.View`
-  padding: 0px 30px;
-  flex-direction: row;
-  margin-bottom: 30px;
-`;
-
-const HColumn = styled.View`
-  margin-left: 15px;
-  width: 80%;
-`;
-
-const Overview = styled.Text`
-  color: white;
-  opacity: 0.7;
-  width: 80%;
-`;
-
-const Release = styled.Text`
-  color: white;
-  font-size: 12px;
-  margin-vertical: 8px;
-`;
-
 const ComingSoonTitle = styled(ListTitle)`
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 `;
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
@@ -182,47 +138,31 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
         <TrendingScroll
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingLeft: 30 }}
-        >
-          {trending.map((movie) => (
-            <Movie key={movie.id}>
-              <Poster path={movie.poster_path} />
-              <Title>
-                {movie.original_title.slice(0, 13)}
-                {movie.original_title.length > 13 ? "..." : null}
-              </Title>
-              <Votes>
-                {movie.vote_average > 0
-                  ? `⭐️ ${movie.vote_average} / 10`
-                  : `Coming soon`}
-              </Votes>
-            </Movie>
-          ))}
-        </TrendingScroll>
+          contentContainerStyle={{ paddingHorizontal: 30 }}
+          data={trending}
+          ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
+          keyExtraction={(item) => item.id + ""}
+          renderItem={({ item }) => (
+            <VMedia
+              posterPath={item.poster_path}
+              originalTitle={item.original_title}
+              voteAverage={item.vote_average}
+            />
+          )}
+        />
       </ListContainer>
 
       {/* COMING SOON */}
       <ListContainer>
         <ComingSoonTitle>Coming soon</ComingSoonTitle>
         {upcoming.map((movie) => (
-          <HMovie key={movie.id}>
-            <Poster path={movie.poster_path} />
-            <HColumn>
-              <Title>{movie.original_title}</Title>
-              <Release>
-                {new Date("2022-10-02").toLocaleDateString("ko", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </Release>
-              <Overview>
-                {movie.overview !== "" && movie.overview.length > 13
-                  ? `${movie.overview.slice(0, 140)} ...`
-                  : movie.overview}
-              </Overview>
-            </HColumn>
-          </HMovie>
+          <HMedia
+            key={movie.id}
+            posterPath={movie.poster_path}
+            originalTitle={movie.original_title}
+            overview={movie.overview}
+            releaseDate={movie.release_date}
+          />
         ))}
       </ListContainer>
     </Container>
