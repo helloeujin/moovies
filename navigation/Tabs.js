@@ -22,6 +22,7 @@ const Tabs = () => {
       }}
       screenOptions={{
         // tabBarLabelPosition: 'beside-icon',
+        unmountOnBlur: true,
         tabBarStyle: { backgroundColor: isDark ? colors.dark : "white" },
         tabBarActiveTintColor: isDark ? colors.orange : colors.dark,
         tabBarInactiveTintColor: isDark ? colors.gray_0 : colors.gray_1,

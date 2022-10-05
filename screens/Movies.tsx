@@ -8,11 +8,14 @@ import {
   Text,
   View,
 } from "react-native";
+
 import Swiper from "react-native-swiper";
 import styled from "styled-components/native";
 import Slide from "../components/Slide";
 import HMedia from "../components/HMedia";
 import VMedia from "../components/VMedia";
+import { useQuery } from "react-query";
+import { moviesAPI } from "../api";
 
 const Container = styled.ScrollView``;
 
@@ -46,56 +49,51 @@ const ComingSoonTitle = styled(ListTitle)`
   margin-bottom: 20px;
 `;
 
+const VSeparator = styled.View`
+  width: 20px;
+`;
+const HSeparator = styled.View`
+  height: 20px;
+`;
+
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [nowPlaying, setNowPlaying] = useState([]);
-  const [upcoming, setUpcoming] = useState([]);
-  const [trending, setTrending] = useState([]);
 
-  const getTrending = async () => {
-    const response = await fetch(
-      `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`
-    );
-    const { results } = await response.json();
+  // loading API data with useQuery
+  const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery(
+    "nowPlaying",
+    moviesAPI.nowPlaying
+  );
+  const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
+    "upcoming",
+    moviesAPI.upcoming
+  );
+  const { isLoading: trendingLoading, data: trendingData } = useQuery(
+    "trending",
+    moviesAPI.trending
+  );
 
-    setTrending(results);
-  };
+  const onRefresh = async () => {};
 
-  const getUpcoming = async () => {
-    const response = await fetch(
-      `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1&region=KR`
-    );
-    const { results } = await response.json();
+  const renderVMedia = ({ item }) => (
+    <VMedia
+      posterPath={item.poster_path}
+      originalTitle={item.original_title}
+      voteAverage={item.vote_average}
+    />
+  );
 
-    setUpcoming(results);
-  };
+  const renderHMedia = ({ item }) => (
+    <HMedia
+      posterPath={item.poster_path}
+      originalTitle={item.original_title}
+      overview={item.overview}
+      releaseDate={item.release_date}
+    />
+  );
 
-  const getNowPlaying = async () => {
-    const response = await fetch(
-      `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1&region=KR`
-    );
-    const { results } = await response.json();
-
-    setNowPlaying(results);
-    // setLoading(false);
-  };
-
-  const getData = async () => {
-    await Promise.all([getTrending(), getUpcoming(), getNowPlaying()]);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await getData();
-    setRefreshing(false);
-  };
-
+  const movieKeyExtractor = (item) => item.id + "";
+  const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
   return loading ? (
     <Loader>
       <ActivityIndicator />
@@ -120,7 +118,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
               marginBottom: 30,
             }}
           >
-            {nowPlaying.map((movie) => (
+            {nowPlayingData.results.map((movie) => (
               <Slide
                 key={movie.id}
                 backdropPath={movie.backdrop_path}
@@ -139,33 +137,20 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
               horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ paddingHorizontal: 30 }}
-              data={trending}
-              ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
-              keyExtraction={(item) => item.id + ""}
-              renderItem={({ item }) => (
-                <VMedia
-                  posterPath={item.poster_path}
-                  originalTitle={item.original_title}
-                  voteAverage={item.vote_average}
-                />
-              )}
+              data={trendingData.results}
+              ItemSeparatorComponent={VSeparator}
+              keyExtraction={movieKeyExtractor}
+              renderItem={renderVMedia}
             />
           </ListContainer>
 
           <ComingSoonTitle>Coming soon</ComingSoonTitle>
         </>
       }
-      data={upcoming}
-      ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-      keyExtraction={(item) => item.id + ""}
-      renderItem={({ item }) => (
-        <HMedia
-          posterPath={item.poster_path}
-          originalTitle={item.original_title}
-          overview={item.overview}
-          releaseDate={item.release_date}
-        />
-      )}
+      data={upcomingData.results}
+      ItemSeparatorComponent={HSeparator}
+      keyExtraction={movieKeyExtractor}
+      renderItem={renderHMedia}
     />
   );
 };
