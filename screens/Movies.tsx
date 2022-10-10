@@ -16,14 +16,9 @@ import HMedia from "../components/HMedia";
 import VMedia from "../components/VMedia";
 import { QueryClient, useQuery, useQueryClient } from "react-query";
 import { MovieResponse, moviesAPI } from "../api";
+import Loader from "../components/Loader";
 
 const Container = styled.ScrollView``;
-
-const Loader = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`;
 
 const API_KEY = "5e53d06765d63c2ad8fe05935854b26d";
 
@@ -103,9 +98,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
     isRefetchingNowPlaying || isRefetchingUpcoming || isRefetchingTrending;
 
   return loading ? (
-    <Loader>
-      <ActivityIndicator />
-    </Loader>
+    <Loader />
   ) : upcomingData ? (
     <FlatList
       onRefresh={onRefresh}
