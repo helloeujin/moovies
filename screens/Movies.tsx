@@ -14,7 +14,7 @@ import styled from "styled-components/native";
 import Slide from "../components/Slide";
 import HMedia from "../components/HMedia";
 import VMedia from "../components/VMedia";
-import { useQuery } from "react-query";
+import { QueryClient, useQuery, useQueryClient } from "react-query";
 import { moviesAPI } from "../api";
 
 const Container = styled.ScrollView``;
@@ -57,30 +57,27 @@ const HSeparator = styled.View`
 `;
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
+  const queryClient = useQueryClient();
+
   // loading API data with useQuery
   const {
     isLoading: nowPlayingLoading,
     data: nowPlayingData,
-    refetch: refetchNowPlaying,
     isRefetching: isRefetchingNowPlaying,
-  } = useQuery("nowPlaying", moviesAPI.nowPlaying);
+  } = useQuery(["movies", "nowPlaying"], moviesAPI.nowPlaying);
   const {
     isLoading: upcomingLoading,
     data: upcomingData,
-    refetch: refetchUpcoming,
     isRefetching: isRefetchingUpcoming,
-  } = useQuery("upcoming", moviesAPI.upcoming);
+  } = useQuery(["movies", "upcoming"], moviesAPI.upcoming);
   const {
     isLoading: trendingLoading,
     data: trendingData,
-    refetch: refetchTrending,
     isRefetching: isRefetchingTrending,
-  } = useQuery("trending", moviesAPI.trending);
+  } = useQuery(["movies", "trending"], moviesAPI.trending);
 
   const onRefresh = async () => {
-    refetchNowPlaying();
-    refetchUpcoming();
-    refetchTrending();
+    queryClient.refetchQueries(["movies"]);
   };
 
   const renderVMedia = ({ item }) => (
