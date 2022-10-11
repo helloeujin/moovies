@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { useQuery } from "react-query";
 import { tvAPI } from "../api";
+import HList, { HListSeperator } from "../components/HList";
 import Loader from "../components/Loader";
 import VMedia from "../components/VMedia";
 
@@ -31,45 +32,57 @@ const Tv = () => {
   }
 
   return (
-    <ScrollView>
-      <FlatList
-        data={trendingData?.results}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <VMedia
-            posterPath={item.poster_path}
-            originalTitle={item.original_name}
-            voteAverage={item.vote_average}
-          />
-        )}
-      />
+    <ScrollView contentContainerStyle={{ paddingVertical: 30 }}>
+      <HList title="Trending TV">
+        <FlatList
+          data={trendingData?.results}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 30 }}
+          ItemSeparatorComponent={HListSeperator}
+          renderItem={({ item }) => (
+            <VMedia
+              posterPath={item.poster_path}
+              originalTitle={item.original_name}
+              voteAverage={item.vote_average}
+            />
+          )}
+        />
+      </HList>
 
-      <FlatList
-        data={todayData?.results}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <VMedia
-            posterPath={item.poster_path}
-            originalTitle={item.original_name}
-            voteAverage={item.vote_average}
-          />
-        )}
-      />
+      <HList title="Airing Today">
+        <FlatList
+          data={todayData?.results}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 30 }}
+          ItemSeparatorComponent={HListSeperator}
+          renderItem={({ item }) => (
+            <VMedia
+              posterPath={item.poster_path}
+              originalTitle={item.original_name}
+              voteAverage={item.vote_average}
+            />
+          )}
+        />
+      </HList>
 
-      <FlatList
-        data={topData?.results}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <VMedia
-            posterPath={item.poster_path}
-            originalTitle={item.original_name}
-            voteAverage={item.vote_average}
-          />
-        )}
-      />
+      <HList title="Top Rated TV">
+        <FlatList
+          data={topData?.results}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 30 }}
+          ItemSeparatorComponent={HListSeperator}
+          renderItem={({ item }) => (
+            <VMedia
+              posterPath={item.poster_path}
+              originalTitle={item.original_name}
+              voteAverage={item.vote_average}
+            />
+          )}
+        />
+      </HList>
     </ScrollView>
   );
 };
