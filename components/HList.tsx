@@ -33,6 +33,7 @@ const HList: React.FC<HListProps> = ({ title, data }) => (
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{ paddingHorizontal: 30 }}
       ItemSeparatorComponent={HListSeperator}
+      keyExtractor={(item) => item.id + ""}
       renderItem={({ item }) => (
         <VMedia
           posterPath={item.poster_path}
