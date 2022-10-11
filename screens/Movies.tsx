@@ -54,26 +54,20 @@ const HSeparator = styled.View`
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   const queryClient = useQueryClient();
+  const [refreshing, setRefreshing] = useState(false);
 
   // loading API data with useQuery
-  const {
-    isLoading: nowPlayingLoading,
-    data: nowPlayingData,
-    isRefetching: isRefetchingNowPlaying,
-  } = useQuery<MovieResponse>(["movies", "nowPlaying"], moviesAPI.nowPlaying);
-  const {
-    isLoading: upcomingLoading,
-    data: upcomingData,
-    isRefetching: isRefetchingUpcoming,
-  } = useQuery<MovieResponse>(["movies", "upcoming"], moviesAPI.upcoming);
-  const {
-    isLoading: trendingLoading,
-    data: trendingData,
-    isRefetching: isRefetchingTrending,
-  } = useQuery<MovieResponse>(["movies", "trending"], moviesAPI.trending);
+  const { isLoading: nowPlayingLoading, data: nowPlayingData } =
+    useQuery<MovieResponse>(["movies", "nowPlaying"], moviesAPI.nowPlaying);
+  const { isLoading: upcomingLoading, data: upcomingData } =
+    useQuery<MovieResponse>(["movies", "upcoming"], moviesAPI.upcoming);
+  const { isLoading: trendingLoading, data: trendingData } =
+    useQuery<MovieResponse>(["movies", "trending"], moviesAPI.trending);
 
   const onRefresh = async () => {
-    queryClient.refetchQueries(["movies"]);
+    setRefreshing(true);
+    await queryClient.refetchQueries(["movies"]);
+    setRefreshing(false);
   };
 
   const renderVMedia = ({ item }) => (
@@ -95,8 +89,6 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
 
   const movieKeyExtractor = (item: Movie) => item.id + "";
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
-  const refreshing =
-    isRefetchingNowPlaying || isRefetchingUpcoming || isRefetchingTrending;
 
   return loading ? (
     <Loader />
