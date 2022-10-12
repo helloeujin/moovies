@@ -1,6 +1,11 @@
 import { BlurView } from "@react-native-community/blur";
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { StyleSheet, useColorScheme } from "react-native";
+import {
+  StyleSheet,
+  TouchableWithoutFeedback,
+  useColorScheme,
+} from "react-native";
 import styled from "styled-components";
 import { makeImgPath } from "../utilities";
 import Poster from "./Poster";
@@ -59,24 +64,37 @@ const Slide: React.FC<SlideProps> = ({
   overview,
 }) => {
   const isDark = useColorScheme() === "dark";
+
+  const navigation = useNavigation();
+  const goToDetail = () => {
+    navigation.navigate("Stack", {
+      screen: "Detail",
+      params: {
+        originalTitle,
+      },
+    });
+  };
+
   return (
-    <View>
-      <BgImg source={{ uri: makeImgPath(backdropPath) }} />
-      <BlurView
-        blurType={isDark ? "dark" : "light"}
-        blurAmount={10}
-        style={StyleSheet.absoluteFill}
-      >
-        <Wrapper>
-          <Poster path={posterPath} />
-          <Column>
-            <Title>{originalTitle}</Title>
-            {voteAverage > 0 ? <Votes>⭐️ {voteAverage}/10</Votes> : null}
-            <Overview>{overview.slice(0, 90)}...</Overview>
-          </Column>
-        </Wrapper>
-      </BlurView>
-    </View>
+    <TouchableWithoutFeedback onPress={goToDetail}>
+      <View>
+        <BgImg source={{ uri: makeImgPath(backdropPath) }} />
+        <BlurView
+          blurType={isDark ? "dark" : "light"}
+          blurAmount={10}
+          style={StyleSheet.absoluteFill}
+        >
+          <Wrapper>
+            <Poster path={posterPath} />
+            <Column>
+              <Title>{originalTitle}</Title>
+              {voteAverage > 0 ? <Votes>⭐️ {voteAverage}/10</Votes> : null}
+              <Overview>{overview.slice(0, 90)}...</Overview>
+            </Column>
+          </Wrapper>
+        </BlurView>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
