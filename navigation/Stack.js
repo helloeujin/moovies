@@ -2,7 +2,8 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Detail from "../screens/Detail";
 import { useColorScheme } from "react-native";
-import colors from "../colors";
+import { BLACK_COLOR } from "../colors";
+// import colors from "../colors";
 
 const NativeStack = createNativeStackNavigator();
 
@@ -14,10 +15,10 @@ const Stack = () => {
       screenOptions={{
         headerBackTitleVisible: false,
         headerStyle: {
-          backgroundColor: isDark ? colors.dark : "white",
+          backgroundColor: isDark ? BLACK_COLOR : "white",
         },
         headerTitleStyle: {
-          color: isDark ? "white" : colors.dark,
+          color: isDark ? "white" : BLACK_COLOR,
         },
       }}
     >

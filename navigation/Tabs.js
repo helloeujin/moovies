@@ -4,10 +4,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Movies from "../screens/Movies";
 import Tv from "../screens/Tv";
 import Search from "../screens/Search";
-import colors from "../colors";
+// import colors from "../colors";
 import { Ionicons } from "@expo/vector-icons";
 import Stack from "./Stack";
 import styled from "styled-components/native";
+import { BLACK_COLOR, DARK_GREY, LIGHT_GREY, YELLOW_COLOR } from "../colors";
+// import { BLACK_COLOR } from "../colors";
 
 const Tab = createBottomTabNavigator();
 
@@ -18,16 +20,16 @@ const Tabs = () => {
     <Tab.Navigator
       initialRouteName="Movie"
       sceneContainerStyle={{
-        backgroundColor: isDark ? colors.dark : "white",
+        backgroundColor: isDark ? BLACK_COLOR : "white",
       }}
       screenOptions={{
         // tabBarLabelPosition: 'beside-icon',
         unmountOnBlur: true,
-        tabBarStyle: { backgroundColor: isDark ? colors.dark : "white" },
-        tabBarActiveTintColor: isDark ? colors.orange : colors.dark,
-        tabBarInactiveTintColor: isDark ? colors.gray_0 : colors.gray_1,
-        headerStyle: { backgroundColor: isDark ? colors.dark : "white" },
-        headerTitleStyle: { color: isDark ? "white" : colors.dark },
+        tabBarStyle: { backgroundColor: isDark ? BLACK_COLOR : "white" },
+        tabBarActiveTintColor: isDark ? YELLOW_COLOR : BLACK_COLOR,
+        tabBarInactiveTintColor: isDark ? DARK_GREY : LIGHT_GREY,
+        headerStyle: { backgroundColor: isDark ? BLACK_COLOR : "white" },
+        headerTitleStyle: { color: isDark ? "white" : BLACK_COLOR },
         tabBarLabelStyle: { fontSize: 12, fontWeight: "600", marginTop: -6 },
       }}
     >
