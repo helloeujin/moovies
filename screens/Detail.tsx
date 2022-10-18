@@ -1,6 +1,15 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  View,
+  Linking,
+  TouchableOpacity,
+  Share,
+  Platform,
+} from "react-native";
 import styled from "styled-components/native";
 import { Movie, moviesAPI, TV, tvAPI } from "../api";
 import Poster from "../components/Poster";
@@ -8,6 +17,9 @@ import { makeImgPath } from "../utilities";
 import { LinearGradient } from "expo-linear-gradient";
 import { BLACK_COLOR } from "../colors";
 import { useQuery } from "react-query";
+import Loader from "../components/Loader";
+import { Ionicons } from "@expo/vector-icons";
+import * as WebBrowser from "expo-web-browser";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -37,10 +49,24 @@ const Title = styled.Text`
   font-weight: 500;
 `;
 
+const Data = styled.View`
+  padding: 0px 20px;
+`;
+
 const Overview = styled.Text`
   color: ${(props) => props.theme.textColor};
-  margin-top: 20px;
-  padding: 0px 20px;
+  margin: 20px 0px;
+`;
+
+const VideoBtn = styled.TouchableOpacity`
+  flex-direction: row;
+`;
+const BtnText = styled.Text`
+  color: white;
+  font-weight: 600;
+  margin-bottom: 10px;
+  line-height: 24px;
+  margin-left: 10px;
 `;
 
 // for Typescript
@@ -54,19 +80,38 @@ const Detail: React.FC<DetailScreenProps> = ({
   navigation: { setOptions },
   route: { params },
 }) => {
-  const { isLoading: moviesLoading, data: moviesData } = useQuery(
-    ["movies", params.id],
-    moviesAPI.detail,
-    {
-      enabled: "original_title" in params,
-    }
+  // data loading
+  const isMovie = "original_title" in params;
+  const { isLoading, data } = useQuery(
+    [isMovie ? "movies" : "tv", params.id],
+    isMovie ? moviesAPI.detail : tvAPI.detail
   );
-  const { isLoading: tvLoading, data: tvData } = useQuery(
-    ["tv", params.id],
-    tvAPI.detail,
-    {
-      enabled: "original_name" in params,
+
+  const shareMedia = async () => {
+    const isAndroid = Platform.OS === "android";
+    const homepage =
+      isMovie && "imdb_id" in data
+        ? `https://www.imdb.com/title/${data.imdb_id}/`
+        : data.homepage;
+
+    if (isAndroid) {
+      await Share.share({
+        message: `${params.overview}\nCheck it out: ${homepage}`,
+        title: "original_title" in params ? "original_title" : "original_name",
+      });
+    } else {
+      await Share.share({
+        url: homepage,
+        title: "original_title" in params ? "original_title" : "original_name",
+      });
     }
+  };
+
+  // share button
+  const ShareButton = () => (
+    <TouchableOpacity onPress={shareMedia}>
+      <Ionicons name="share-outline" color="white" size={20} />
+    </TouchableOpacity>
   );
 
   useEffect(() => {
@@ -74,6 +119,22 @@ const Detail: React.FC<DetailScreenProps> = ({
       title: "original_title" in params ? "Movie" : "TV Show",
     });
   }, []);
+
+  useEffect(() => {
+    setOptions({
+      headerRight: () => <ShareButton />,
+    });
+  }, [data]);
+
+  const openYTLink = async (videoID: string) => {
+    const baseUrl = `http://m.youtube.com/watch?v=${videoID}`;
+
+    //// Allow to open in default browser or app
+    // await Linking.openURL(baseUrl);
+
+    //// Allow to open in in-app browser
+    await WebBrowser.openBrowserAsync(baseUrl);
+  };
 
   return (
     <Container>
@@ -97,7 +158,16 @@ const Detail: React.FC<DetailScreenProps> = ({
         </Column>
       </Header>
 
-      <Overview>{params.overview}</Overview>
+      <Data>
+        <Overview>{params.overview}</Overview>
+        {isLoading ? <Loader /> : null}
+        {data?.videos?.results?.map((video) => (
+          <VideoBtn key={video.key} onPress={() => openYTLink(video.key)}>
+            <Ionicons name="logo-youtube" color="white" size={20} />
+            <BtnText>{video.name}</BtnText>
+          </VideoBtn>
+        ))}
+      </Data>
     </Container>
   );
 };
