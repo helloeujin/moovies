@@ -7,7 +7,12 @@ import {
   InteractionManager,
   RefreshControl,
 } from "react-native";
-import { QueryClient, useQuery, useQueryClient } from "react-query";
+import {
+  QueryClient,
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from "react-query";
 import { tvAPI } from "../api";
 import HList, { HListSeperator } from "../components/HList";
 import Loader from "../components/Loader";
@@ -17,10 +22,18 @@ const Tv = () => {
   const queryClient = useQueryClient();
   const [refreshing, setRefreshing] = useState(false);
 
-  const { isLoading: todayLoading, data: todayData } = useQuery(
-    ["tv", "today"],
-    tvAPI.airingToday
-  );
+  const {
+    isLoading: todayLoading,
+    data: todayData,
+    hasNextPage: todayHasNextPage,
+    fetchNextPage: todayFetchNextPage,
+  } = useInfiniteQuery(["tv", "today"], tvAPI.airingToday, {
+    getNextPageParam: (currentPage) => {
+      const nextPage = currentPage.page + 1;
+      return nextPage > currentPage.total_pages ? null : nextPage;
+    },
+  });
+
   const { isLoading: topLoading, data: topData } = useQuery(
     ["tv", "top"],
     tvAPI.topRated
@@ -29,6 +42,8 @@ const Tv = () => {
     ["tv", "trending"],
     tvAPI.trending
   );
+
+  // console.log(todayData);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -50,7 +65,14 @@ const Tv = () => {
       contentContainerStyle={{ paddingVertical: 30 }}
     >
       <HList title="Trending TV" data={trendingData?.results} />
-      <HList title="Airing Today" data={todayData?.results} />
+      {todayData ? (
+        <HList
+          title="Airing Today"
+          data={todayData.pages.map((page) => page.results).flat()}
+          hasNextPage={todayHasNextPage}
+          fetchNextPage={() => todayFetchNextPage()}
+        />
+      ) : null}
       <HList title="Top Rated TV" data={topData?.results} />
     </ScrollView>
   );

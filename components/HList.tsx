@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList } from "react-native";
+import { Alert, FlatList } from "react-native";
 import styled from "styled-components";
 import VMedia from "./VMedia";
 
@@ -24,26 +24,42 @@ const ListTitle = styled.Text`
   margin-bottom: 20px;
 `;
 
-const HList: React.FC<HListProps> = ({ title, data }) => (
-  <ListContainer>
-    <ListTitle>{title}</ListTitle>
-    <FlatList
-      data={data}
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{ paddingHorizontal: 30 }}
-      ItemSeparatorComponent={HListSeperator}
-      keyExtractor={(item) => item.id + ""}
-      renderItem={({ item }) => (
-        <VMedia
-          posterPath={item.poster_path}
-          originalTitle={item.original_title ?? item.original_name}
-          voteAverage={item.vote_average}
-          fullData={item}
-        />
-      )}
-    />
-  </ListContainer>
-);
+const HList: React.FC<HListProps> = ({
+  title,
+  data,
+  hasNextPage,
+  fetchNextPage,
+}) => {
+  const loadMore = () => {
+    // if (hasNextPage) {
+    //   fetchNextPage();
+    // }
+  };
+  // console.log(data);
+
+  return (
+    <ListContainer>
+      <ListTitle>{title}</ListTitle>
+      <FlatList
+        onEndReached={loadMore}
+        // onEndReachedThreshold={0.9}
+        data={data}
+        horizontal
+        // showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: 30 }}
+        ItemSeparatorComponent={HListSeperator}
+        keyExtractor={(item) => item.id + ""}
+        renderItem={({ item }) => (
+          <VMedia
+            posterPath={item.poster_path}
+            originalTitle={item.original_title ?? item.original_name}
+            voteAverage={item.vote_average}
+            fullData={item}
+          />
+        )}
+      />
+    </ListContainer>
+  );
+};
 
 export default HList;
