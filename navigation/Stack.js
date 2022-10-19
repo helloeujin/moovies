@@ -25,7 +25,7 @@ const Stack = () => {
       <NativeStack.Screen
         name="Detail"
         component={Detail}
-        options={{ presentation: "modal" }}
+        // options={{ presentation: "modal" }}
       />
     </NativeStack.Navigator>
   );

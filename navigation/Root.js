@@ -8,7 +8,7 @@ const Nav = createNativeStackNavigator();
 const Root = () => (
   <Nav.Navigator
     screenOptions={{
-      // presentation: "modal",
+      presentation: "modal",
       headerShown: false,
     }}
   >
