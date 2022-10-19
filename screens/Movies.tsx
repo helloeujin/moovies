@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Dimensions,
   FlatList,
   RefreshControl,
@@ -14,7 +15,12 @@ import styled from "styled-components/native";
 import Slide from "../components/Slide";
 import HMedia from "../components/HMedia";
 import VMedia from "../components/VMedia";
-import { QueryClient, useQuery, useQueryClient } from "react-query";
+import {
+  QueryClient,
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from "react-query";
 import { MovieResponse, moviesAPI } from "../api";
 import Loader from "../components/Loader";
 import HList from "../components/HList";
@@ -59,8 +65,23 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   // loading API data with useQuery
   const { isLoading: nowPlayingLoading, data: nowPlayingData } =
     useQuery<MovieResponse>(["movies", "nowPlaying"], moviesAPI.nowPlaying);
-  const { isLoading: upcomingLoading, data: upcomingData } =
-    useQuery<MovieResponse>(["movies", "upcoming"], moviesAPI.upcoming);
+
+  const {
+    isLoading: upcomingLoading,
+    data: upcomingData,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery<MovieResponse>(
+    ["movies", "upcoming"],
+    moviesAPI.upcoming,
+    {
+      getNextPageParam: (currentPage) => {
+        const nextPage = currentPage.page + 1;
+        return nextPage > currentPage.total_pages ? null : nextPage;
+      },
+    }
+  );
+
   const { isLoading: trendingLoading, data: trendingData } =
     useQuery<MovieResponse>(["movies", "trending"], moviesAPI.trending);
 
@@ -91,11 +112,18 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
 
   const movieKeyExtractor = (item: Movie) => item.id + "";
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
+  const loadMore = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  };
 
   return loading ? (
     <Loader />
   ) : upcomingData ? (
     <FlatList
+      onEndReached={loadMore}
+      onEndReachedThreshold={0.9}
       onRefresh={onRefresh}
       refreshing={refreshing}
       ListHeaderComponent={
@@ -134,7 +162,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
           <ComingSoonTitle>Coming soon</ComingSoonTitle>
         </>
       }
-      data={upcomingData.results}
+      data={upcomingData.pages.map((page) => page.results).flat()}
       ItemSeparatorComponent={HSeparator}
       keyExtraction={movieKeyExtractor}
       renderItem={renderHMedia}
@@ -143,3 +171,15 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
 };
 
 export default Movies;
+
+/*
+//// upcomingData format
+{
+"pageParams": [undefined],
+"pages": [
+  {"dates": [Object], "page": 1, "results": [Array], "total_pages": 18, "total_results": 348}
+  {"dates": [Object], "page": 2, "results": [Array], "total_pages": 18, "total_results": 348}
+  {"dates": [Object], "page": 3, "results": [Array], "total_pages": 18, "total_results": 348}
+  {"dates": [Object], "page": 4, "results": [Array], "total_pages": 18, "total_results": 348}
+  ]
+}*/

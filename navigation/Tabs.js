@@ -37,11 +37,11 @@ const Tabs = () => {
         name="Movies"
         component={Movies}
         options={{
-          headerRight: () => (
-            <View>
-              <Text>Hello</Text>
-            </View>
-          ),
+          // headerRight: () => (
+          //   <View>
+          //     <Text>Hello</Text>
+          //   </View>
+          // ),
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons name="film-outline" color={color} size={size} />
           ),
